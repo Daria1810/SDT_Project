@@ -84,6 +84,8 @@
 
 **Milestone 4**: Full microservices implementation with at least 3 services (User Service, Content Service, Streaming Service), inter-service communication, and CI/CD pipeline
 
+**Milestone 5**: Message Queue + CI/CD Pipeline
+
 ---
 
 ## Design Patterns
