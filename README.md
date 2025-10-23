@@ -320,3 +320,7 @@ These four patterns work together cohesively in StreamFlix:
 ## Conclusion
 
 StreamFlix demonstrates four essential design patterns that solve real architectural challenges in a video streaming platform. Each pattern addresses specific problems that simpler approaches cannot handle effectively, providing extensibility, maintainability, and efficiency that are critical for a scalable application.
+# SDT_Project
+
+Project made by Bilciurescu Elena-Alina, Solomon Miruna-Maria and Toma Daria-Maria. 
+Group 1241EA CTI-E.
