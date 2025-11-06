@@ -1,6 +1,8 @@
 # StreamFlix — SDT Project
 Team: Bilciurescu Elena-Alina, Solomon Miruna-Maria, Toma Daria-Maria (1241EA)
 
+Group 1241EA CTI-E.
+
 This repository contains a proof‑of‑concept (Milestone 2) Spring Boot application demonstrating four non‑trivial design patterns (Factory Method, Strategy, Observer, Singleton) for a video streaming platform.
 
 ## How to run (POC)

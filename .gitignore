@@ -4,6 +4,19 @@
 # Build output
 target/
 
+# Maven release/versions plugin artifacts
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Maven Wrapper binary (if present)
+.mvn/wrapper/maven-wrapper.jar
+
 # IDE
 .idea/
 *.iml
@@ -21,6 +34,3 @@ hs_err_pid*
 .env
 bin/
 out/
-
-# Maven Wrapper binary (if present)
-.mvn/wrapper/maven-wrapper.jar
