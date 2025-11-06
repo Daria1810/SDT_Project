@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>StreamFlix Demo UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/ui/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>StreamFlix Demo</h1>
+    <nav>
+      <a href="#users">Users</a>
+      <a href="#content">Content</a>
+      <a href="#video">Video Events</a>
+      <a href="#reco">Recommendations</a>
+      <a href="#demo">Demo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="users">
+      <h2>Users</h2>
+      <div class="card">
+        <h3>Register User</h3>
+        <form id="form-register">
+          <label>Email <input type="email" name="email" required /></label>
+          <label>Password <input type="password" name="password" required /></label>
+          <label>Tier
+            <select name="tier">
+              <option value="BASIC">BASIC</option>
+              <option value="STANDARD">STANDARD</option>
+              <option value="PREMIUM" selected>PREMIUM</option>
+            </select>
+          </label>
+          <button type="submit">Register</button>
+        </form>
+        <pre class="result" id="res-register"></pre>
+      </div>
+
+      <div class="card">
+        <h3>Get User</h3>
+        <form id="form-get-user">
+          <label>User ID <input type="number" name="id" required min="1" /></label>
+          <button type="submit">Fetch</button>
+        </form>
+        <pre class="result" id="res-get-user"></pre>
+      </div>
+    </section>
+
+    <section id="content">
+      <h2>Content</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Create Movie</h3>
+          <form id="form-movie">
+            <label>Title <input name="title" required /></label>
+            <label>Description <input name="description" /></label>
+            <label>Genre <input name="genre" value="Sci-Fi" /></label>
+            <label>Release Year <input type="number" name="releaseYear" value="2010" /></label>
+            <label>Duration (min) <input type="number" name="durationMinutes" value="120" /></label>
+            <button type="submit">Create Movie</button>
+          </form>
+          <pre class="result" id="res-movie"></pre>
+        </div>
+
+        <div class="card">
+          <h3>Create TV Series</h3>
+          <form id="form-tv">
+            <label>Title <input name="title" required /></label>
+            <label>Description <input name="description" /></label>
+            <label>Genre <input name="genre" value="Drama" /></label>
+            <label>Release Year <input type="number" name="releaseYear" value="2016" /></label>
+            <label>Seasons <input type="number" name="seasons" value="1" /></label>
+            <label>Total Episodes <input type="number" name="totalEpisodes" value="8" /></label>
+            <label>Avg Episode (min) <input type="number" name="averageEpisodeDuration" value="45" /></label>
+            <button type="submit">Create TV Series</button>
+          </form>
+          <pre class="result" id="res-tv"></pre>
+        </div>
+
+        <div class="card">
+          <h3>Get Content by ID</h3>
+          <form id="form-get-content">
+            <label>Content ID <input type="number" name="id" required min="1" /></label>
+            <button type="submit">Fetch</button>
+          </form>
+          <pre class="result" id="res-get-content"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="video">
+      <h2>Video Events</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Record Watch Event</h3>
+          <form id="form-watch">
+            <label>User ID <input type="number" name="userId" required /></label>
+            <label>Content ID <input type="number" name="contentId" required /></label>
+            <label>Progress (sec) <input type="number" name="progressSeconds" value="600" /></label>
+            <label>Completed?
+              <select name="completed">
+                <option value="false" selected>No</option>
+                <option value="true">Yes</option>
+              </select>
+            </label>
+            <button type="submit">Record</button>
+          </form>
+          <pre class="result" id="res-watch"></pre>
+        </div>
+
+        <div class="card">
+          <h3>Rate Content</h3>
+          <form id="form-rate">
+            <label>User ID <input type="number" name="userId" required /></label>
+            <label>Content ID <input type="number" name="contentId" required /></label>
+            <label>Rating (1-5) <input type="number" min="1" max="5" name="rating" value="5" /></label>
+            <button type="submit">Rate</button>
+          </form>
+          <pre class="result" id="res-rate"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="reco">
+      <h2>Recommendations</h2>
+      <form id="form-reco">
+        <label>User ID <input type="number" name="userId" required /></label>
+        <label>Limit <input type="number" name="limit" value="5" min="1" max="20" /></label>
+        <button type="submit">Get Recommendations</button>
+      </form>
+      <pre class="result" id="res-reco"></pre>
+    </section>
+
+    <section id="demo">
+      <h2>Demo</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Full Demo</h3>
+          <button id="btn-demo-full">Run Full Demo</button>
+          <pre class="result" id="res-demo-full"></pre>
+        </div>
+        <div class="card">
+          <h3>Singleton Test</h3>
+          <button id="btn-demo-singleton">Run Singleton Test</button>
+          <pre class="result" id="res-demo-singleton"></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Spring Boot 1.2.7 • H2 in-memory • Factory • Strategy • Observer • Singleton</small>
+  </footer>
+
+  <script src="/ui/app.js"></script>
+</body>
+</html>

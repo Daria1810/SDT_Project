@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+
+# Build output
+target/
+
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Logs
+logs/
+*.log
+hs_err_pid*
+
+# Environment / local
+.env
+bin/
+out/
+
+# Maven Wrapper binary (if present)
+.mvn/wrapper/maven-wrapper.jar
