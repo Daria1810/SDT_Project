@@ -172,4 +172,5 @@ StreamFlix is a video streaming platform similar to Netflix that allows users to
 3. Observer — decoupled reactions to events (watch/rate) by multiple observers (history, analytics, notifications).
 4. Singleton — single instances for shared resources (DB pool, cache, configuration).
 
-For additional information, please refer to the README on the 1-teams-and-project-description branch.
+For additional information, please refer to the README on the [1-teams-and-project-description branch](https://github.com/Daria1810/SDT_Project/tree/1-teams-and-project-description).
+
