@@ -1,7 +1,7 @@
 package com.example.observer;
 
 /**
- * Sends user-facing notifications for interesting events.
+ * sends user-facing notifications for interesting events.
  */
 public class NotificationObserver implements EventObserver {
     
@@ -18,7 +18,7 @@ public class NotificationObserver implements EventObserver {
     }
     
     private void sendCompletionNotification(VideoWatchedEvent event) {
-        // In real system, would send email/push notification
+        //in real system, would send email/push notification
         System.out.println("[NotificationObserver] Sent completion notification to user " + event.getUserId() + 
                           " for content " + event.getContentId());
     }

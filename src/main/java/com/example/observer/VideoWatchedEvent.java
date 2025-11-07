@@ -1,8 +1,7 @@
 package com.example.observer;
 
-/**
- * Event emitted when a user watches a piece of content.
- */
+//event emitted when a user watches a piece of content
+
 public class VideoWatchedEvent extends Event {
     private Long contentId;
     private int progressSeconds;

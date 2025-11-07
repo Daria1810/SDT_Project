@@ -1,11 +1,10 @@
 package com.example.observer;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+//import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-/**
- * Adjusts a user's recommendation profile based on activity.
- */
+//observer that updates recommendations based on user activity
+
 public class RecommendationObserver implements EventObserver {
     private NamedParameterJdbcTemplate jdbcTemplate;
     
@@ -25,7 +24,7 @@ public class RecommendationObserver implements EventObserver {
     }
     
     private void updateUserPreferences(VideoWatchedEvent event) {
-        // In real system, would update ML model or preference weights
+        //in real system, would update ML model or preference weights
         System.out.println("[RecommendationObserver] Updated preferences for user " + event.getUserId() + 
                           " based on watching content " + event.getContentId());
     }

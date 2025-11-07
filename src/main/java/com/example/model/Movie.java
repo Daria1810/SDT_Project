@@ -1,8 +1,7 @@
 package com.example.model;
 
-/**
- * Movie content with a single total duration.
- */
+//movie content with a single total duration.
+
 public class Movie extends Content {
     private int durationMinutes;
     

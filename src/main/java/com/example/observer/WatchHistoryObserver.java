@@ -3,9 +3,8 @@ package com.example.observer;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-/**
- * Saves watch progress when a user watches a video.
- */
+//observer that saves watch progress when a user watches a video
+ 
 public class WatchHistoryObserver implements EventObserver {
     private NamedParameterJdbcTemplate jdbcTemplate;
     
@@ -33,6 +32,10 @@ public class WatchHistoryObserver implements EventObserver {
             .addValue("completed", event.isCompleted());
         
         jdbcTemplate.update(sql, params);
+
+        // Mark user as no longer new once they have any watch interaction
+        String markNotNew = "UPDATE users SET is_new = FALSE WHERE id = :userId AND is_new = TRUE";
+        jdbcTemplate.update(markNotNew, new MapSqlParameterSource().addValue("userId", event.getUserId()));
         System.out.println("[WatchHistoryObserver] Saved watch progress for user " + event.getUserId() + 
                           ", content " + event.getContentId() + ": " + event.getProgressSeconds() + "s");
     }

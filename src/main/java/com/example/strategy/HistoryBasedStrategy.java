@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Recommends content based on the user's watch history.
- * Looks at preferred genres and finds similar titles.
- */
+
+ //recommends content based on the user's watch history
+ //looks at preferred genres and finds similar titles
+
 public class HistoryBasedStrategy implements RecommendationStrategy {
     private NamedParameterJdbcTemplate jdbcTemplate;
     
@@ -24,25 +24,26 @@ public class HistoryBasedStrategy implements RecommendationStrategy {
     
     @Override
     public List<Content> recommend(User user, int limit) {
-        // Find user's most watched genres
-        String sql = "SELECT c.* FROM content c " +
-                    "WHERE c.genre IN (" +
-                    "  SELECT c2.genre FROM content c2 " +
-                    "  JOIN watch_history wh ON c2.id = wh.content_id " +
-                    "  WHERE wh.user_id = :userId " +
-                    "  GROUP BY c2.genre " +
-                    "  ORDER BY COUNT(*) DESC " +
-                    "  LIMIT 3" +
-                    ") " +
-                    "AND c.id NOT IN (" +
-                    "  SELECT content_id FROM watch_history WHERE user_id = :userId" +
-                    ") " +
-                    "ORDER BY c.average_rating DESC, c.view_count DESC " +
-                    "LIMIT :limit";
+    // Find user's most watched genres using a derived table and exclude already watched content via LEFT JOIN.
+    // This avoids potential quirks with IN (...) + LIMIT in older H2 versions.
+    String sql =
+        "SELECT c.* FROM content c " +
+        "JOIN ( " +
+        "  SELECT UPPER(TRIM(c2.genre)) AS g " +
+        "  FROM content c2 " +
+        "  JOIN watch_history wh ON c2.id = wh.content_id " +
+        "  WHERE wh.user_id = :userId " +
+        "  GROUP BY UPPER(TRIM(c2.genre)) " +
+        "  ORDER BY COUNT(*) DESC " +
+        "  LIMIT 3 " +
+        ") topg ON UPPER(TRIM(c.genre)) = topg.g " +
+        "LEFT JOIN watch_history wh2 ON wh2.user_id = :userId AND wh2.content_id = c.id " +
+        "WHERE wh2.content_id IS NULL " +
+        "ORDER BY c.average_rating DESC, c.view_count DESC " +
+        "LIMIT " + Math.max(1, limit);
         
         Map<String, Object> params = new HashMap<>();
         params.put("userId", user.getId());
-        params.put("limit", limit);
         
         return jdbcTemplate.query(sql, params, new ContentRowMapper());
     }

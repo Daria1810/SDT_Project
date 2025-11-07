@@ -3,9 +3,9 @@ package com.example.observer;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-/**
- * Updates analytics like view counts and average ratings.
- */
+
+//updates analytics like view counts and average ratings
+
 public class AnalyticsObserver implements EventObserver {
     private NamedParameterJdbcTemplate jdbcTemplate;
     

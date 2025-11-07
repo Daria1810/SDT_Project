@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * REST endpoints for recording watches and ratings.
- */
+//REST endpoints for recording watches and ratings.
+
 @RestController
 @RequestMapping("/api/video")
 public class VideoController {

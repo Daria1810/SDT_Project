@@ -1,9 +1,9 @@
 package com.example.model;
 import java.time.LocalDateTime;
 
-/**
- * Base type for all content (movies, series, etc.).
- */
+
+//base type for all content (movies, series)
+
 public abstract class Content {
     private Long id;
     private String title;

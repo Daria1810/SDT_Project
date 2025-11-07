@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Creates and loads users.
- */
+//creates and loads users
 @Service
 public class UserService {
     @Autowired

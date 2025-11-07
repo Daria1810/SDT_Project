@@ -17,8 +17,14 @@ async function getJson(url) {
   return res.json();
 }
 
+// Utility guarded binder to avoid errors if an element doesn't exist
+function bind(selector, event, handler) {
+  const el = document.querySelector(selector);
+  if (el) el.addEventListener(event, handler);
+}
+
 // Users
-$('#form-register').addEventListener('submit', async (e) => {
+bind('#form-register', 'submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const payload = {
@@ -30,7 +36,7 @@ $('#form-register').addEventListener('submit', async (e) => {
   catch (err) { show('res-register', `Error: ${err}`); }
 });
 
-$('#form-get-user').addEventListener('submit', async (e) => {
+bind('#form-get-user', 'submit', async (e) => {
   e.preventDefault();
   const id = Number(new FormData(e.target).get('id'));
   try { const data = await getJson(`/api/users/${id}`); show('res-get-user', data); }
@@ -38,7 +44,7 @@ $('#form-get-user').addEventListener('submit', async (e) => {
 });
 
 // Content - Movie
-$('#form-movie').addEventListener('submit', async (e) => {
+bind('#form-movie', 'submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const payload = {
@@ -54,7 +60,7 @@ $('#form-movie').addEventListener('submit', async (e) => {
 });
 
 // Content - TV Series
-$('#form-tv').addEventListener('submit', async (e) => {
+bind('#form-tv', 'submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const payload = {
@@ -71,7 +77,7 @@ $('#form-tv').addEventListener('submit', async (e) => {
   catch (err) { show('res-tv', `Error: ${err}`); }
 });
 
-$('#form-get-content').addEventListener('submit', async (e) => {
+bind('#form-get-content', 'submit', async (e) => {
   e.preventDefault();
   const id = Number(new FormData(e.target).get('id'));
   try { const data = await getJson(`/api/content/${id}`); show('res-get-content', data); }
@@ -79,7 +85,7 @@ $('#form-get-content').addEventListener('submit', async (e) => {
 });
 
 // Video
-document.getElementById('form-watch').addEventListener('submit', async (e) => {
+bind('#form-watch', 'submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const payload = {
@@ -92,7 +98,7 @@ document.getElementById('form-watch').addEventListener('submit', async (e) => {
   catch (err) { show('res-watch', `Error: ${err}`); }
 });
 
-document.getElementById('form-rate').addEventListener('submit', async (e) => {
+bind('#form-rate', 'submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const payload = {
@@ -105,7 +111,7 @@ document.getElementById('form-rate').addEventListener('submit', async (e) => {
 });
 
 // Recommendations
-$('#form-reco').addEventListener('submit', async (e) => {
+bind('#form-reco', 'submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const userId = Number(fd.get('userId'));
@@ -115,12 +121,17 @@ $('#form-reco').addEventListener('submit', async (e) => {
 });
 
 // Demo buttons
-$('#btn-demo-full').addEventListener('click', async () => {
-  try { const data = await getJson('/api/demo/full'); show('res-demo-full', data); }
-  catch (err) { show('res-demo-full', `Error: ${err}`); }
-});
+// Full Demo removed from UI; keep code minimal and avoid referencing missing element.
 
-$('#btn-demo-singleton').addEventListener('click', async () => {
-  try { const data = await getJson('/api/demo/singleton-test'); show('res-demo-singleton', data); }
-  catch (err) { show('res-demo-singleton', `Error: ${err}`); }
-});
+async function runSingletonTest() {
+  show('res-demo-singleton', 'Running singleton test...');
+  try {
+    const data = await getJson('/api/demo/singleton-test');
+    show('res-demo-singleton', data);
+  } catch (err) {
+    show('res-demo-singleton', `Error: ${err}`);
+  }
+}
+
+// Primary binding (guarded)
+bind('#btn-demo-singleton', 'click', (e) => { e.preventDefault(); runSingletonTest(); });

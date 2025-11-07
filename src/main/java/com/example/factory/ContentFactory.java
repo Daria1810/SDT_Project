@@ -2,9 +2,8 @@ package com.example.factory;
 
 import com.example.model.Content;
 
-/**
- * Creates content instances without exposing construction details.
- */
+//creates content instances without exposing construction details.
+
 public interface ContentFactory {
     /**
      * Build a content object.

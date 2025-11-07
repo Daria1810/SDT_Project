@@ -1,8 +1,7 @@
 package com.example.model;
 
-/**
- * TV series content with seasons and episodes.
- */
+//TV series content with seasons and episodes.
+ 
 public class TVSeries extends Content {
     private int seasons;
     private int totalEpisodes;

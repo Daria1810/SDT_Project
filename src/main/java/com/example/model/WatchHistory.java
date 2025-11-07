@@ -1,9 +1,8 @@
 package com.example.model;
 import java.time.LocalDateTime;
 
-/**
- * User's watch history with progress tracking
- */
+//tracks user's watch progress for content
+
 public class WatchHistory {
     private Long id;
     private Long userId;

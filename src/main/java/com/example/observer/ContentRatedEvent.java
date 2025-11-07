@@ -1,8 +1,6 @@
 package com.example.observer;
 
-/**
- * Event emitted when a user rates content.
- */
+//event emitted when a user rates a piece of content
 public class ContentRatedEvent extends Event {
     private Long contentId;
     private int rating;

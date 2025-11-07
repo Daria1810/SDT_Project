@@ -1,17 +1,16 @@
 package com.example.observer;
 
-/**
- * Receives notifications when events occur.
- */
+//receives notifications when events occur
+
 public interface EventObserver {
     /**
-     * Called when an event occurs.
-     * @param event the event that occurred
+     * 
+     * @param event 
      */
     void update(Event event);
     
     /**
-     * @return human-friendly name of this observer
+     * @return 
      */
     String getObserverName();
 }

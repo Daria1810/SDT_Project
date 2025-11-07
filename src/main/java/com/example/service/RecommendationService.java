@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Generates content recommendations.
- * Picks the best algorithm at runtime based on what we know about the user.
- */
+//service that provides content recommendations using different strategies
+
 @Service
 public class RecommendationService {
     @Autowired
@@ -20,32 +18,56 @@ public class RecommendationService {
     
     private RecommendationStrategy strategy;
     
-    /**
-     * Get recommendations for a user.
-     * The underlying algorithm is chosen automatically from user data.
-     */
+    //get recommendations for a user
     public List<Content> getRecommendations(User user, int limit) {
         selectStrategy(user);
-        
-        System.out.println("[RecommendationService] Using " + strategy.getStrategyName() + 
-                          " strategy for user " + user.getId());
-        
-        return strategy.recommend(user, limit);
+    List<Content> results = strategy.recommend(user, limit);
+    System.out.println("[RecommendationService] Using " + strategy.getStrategyName() +
+        " strategy for user " + user.getId() + "; got " + results.size() + " items");
+
+        // Fallbacks: if the chosen strategy returns nothing, try alternates
+        if (results.isEmpty()) {
+            if (strategy instanceof RatingBasedStrategy) {
+                System.out.println("[RecommendationService] Fallback to History-Based");
+                strategy = new HistoryBasedStrategy(jdbcTemplate);
+                results = strategy.recommend(user, limit);
+                if (results.isEmpty()) {
+                    System.out.println("[RecommendationService] Fallback to Trending");
+                    strategy = new TrendingStrategy(jdbcTemplate);
+                    results = strategy.recommend(user, limit);
+                }
+            } else if (strategy instanceof HistoryBasedStrategy) {
+                System.out.println("[RecommendationService] Fallback to Rating-Based");
+                strategy = new RatingBasedStrategy(jdbcTemplate);
+                results = strategy.recommend(user, limit);
+                if (results.isEmpty()) {
+                    System.out.println("[RecommendationService] Fallback to Trending");
+                    strategy = new TrendingStrategy(jdbcTemplate);
+                    results = strategy.recommend(user, limit);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    /** Exposes the active strategy name for debugging/UI. */
+    public String getCurrentStrategyName() {
+        return strategy != null ? strategy.getStrategyName() : "Unknown";
     }
     
-    /**
-     * Choose a recommendation approach based on user state.
-     */
+    //choose the best strategy based on user data
+
     private void selectStrategy(User user) {
-        if (user.isNew() || !hasWatchHistory(user)) {
-            // New users get trending content
-            strategy = new TrendingStrategy(jdbcTemplate);
-        } else if (hasRatings(user)) {
+        if (hasRatings(user)) {
             // Users who rate content get rating-based recommendations
             strategy = new RatingBasedStrategy(jdbcTemplate);
-        } else {
+        } else if (hasWatchHistory(user)) {
             // Users with watch history get history-based recommendations
             strategy = new HistoryBasedStrategy(jdbcTemplate);
+        } else {
+            // No signals yet: trending
+            strategy = new TrendingStrategy(jdbcTemplate);
         }
     }
     
@@ -65,9 +87,7 @@ public class RecommendationService {
         return count != null && count.longValue() > 0;
     }
     
-    /**
-     * Optional manual override (useful for tests or admin tools).
-     */
+    //optional manual override
     public void setStrategy(RecommendationStrategy strategy) {
         this.strategy = strategy;
     }

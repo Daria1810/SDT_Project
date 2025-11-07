@@ -9,12 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Recommends trending content (high views, high ratings),
- * great for new users with little or no history.
- */
+//recommends trending content (high views, high ratings),
+//great for new users with little or no history
+
 public class TrendingStrategy implements RecommendationStrategy {
     private NamedParameterJdbcTemplate jdbcTemplate;
     
@@ -24,11 +22,9 @@ public class TrendingStrategy implements RecommendationStrategy {
     
     @Override
     public List<Content> recommend(User user, int limit) {
-        String sql = "SELECT * FROM content ORDER BY view_count DESC, average_rating DESC LIMIT :limit";
-        Map<String, Object> params = new HashMap<>();
-        params.put("limit", limit);
-        
-        return jdbcTemplate.query(sql, params, new ContentRowMapper());
+        // Some H2 versions behave inconsistently with named params in LIMIT; inline the value safely.
+        String sql = "SELECT * FROM content ORDER BY view_count DESC, average_rating DESC LIMIT " + Math.max(1, limit);
+        return jdbcTemplate.query(sql, new HashMap<String, Object>(), new ContentRowMapper());
     }
     
     @Override

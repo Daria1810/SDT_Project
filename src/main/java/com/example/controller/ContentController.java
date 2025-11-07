@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * REST endpoints for creating and fetching content.
- */
+
+ //REST endpoints for creating and fetching content.
+ 
 @RestController
 @RequestMapping("/api/content")
 public class ContentController {

@@ -4,9 +4,8 @@ import com.example.model.Content;
 import com.example.model.TVSeries;
 import java.time.LocalDateTime;
 
-/**
- * Builds TVSeries objects from provided fields.
- */
+//builds TVSeries objects from provided fields
+
 public class TVSeriesFactory implements ContentFactory {
     private String title;
     private String description;

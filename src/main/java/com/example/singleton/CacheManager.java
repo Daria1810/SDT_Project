@@ -3,10 +3,8 @@ package com.example.singleton;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
-/**
- * Simple in-memory cache shared across the app.
- * Useful for frequently accessed lookups with a basic TTL.
- */
+//imple in-memory cache shared across the app.
+ 
 public class CacheManager {
     private static volatile CacheManager instance;
     private Map<String, Object> cache;

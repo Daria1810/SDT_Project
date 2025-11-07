@@ -11,10 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Recommends content similar to items a user rated highly.
- * Best for users who actively leave ratings.
- */
+//recommends content similar to items a user rated highly
+//best for users who actively leave ratings
 public class RatingBasedStrategy implements RecommendationStrategy {
     private NamedParameterJdbcTemplate jdbcTemplate;
     
@@ -24,25 +22,26 @@ public class RatingBasedStrategy implements RecommendationStrategy {
     
     @Override
     public List<Content> recommend(User user, int limit) {
-        // Find content similar to user's 4-5 star ratings
-        String sql = "SELECT c.* FROM content c " +
-                    "WHERE c.genre IN (" +
-                    "  SELECT c2.genre FROM content c2 " +
-                    "  JOIN rating r ON c2.id = r.content_id " +
-                    "  WHERE r.user_id = :userId AND r.rating >= 4 " +
-                    "  GROUP BY c2.genre " +
-                    "  ORDER BY AVG(r.rating) DESC " +
-                    "  LIMIT 3" +
-                    ") " +
-                    "AND c.id NOT IN (" +
-                    "  SELECT content_id FROM rating WHERE user_id = :userId" +
-                    ") " +
-                    "ORDER BY c.average_rating DESC " +
-                    "LIMIT :limit";
+        //find content similar to user's 4-5 star ratings
+        //Use derived-table JOIN for top genres and LEFT JOIN to exclude already-rated content
+        String sql =
+            "SELECT c.* FROM content c " +
+            "JOIN ( " +
+            "  SELECT UPPER(TRIM(c2.genre)) AS g " +
+            "  FROM content c2 " +
+            "  JOIN rating r ON c2.id = r.content_id " +
+            "  WHERE r.user_id = :userId AND r.rating >= 4 " +
+            "  GROUP BY UPPER(TRIM(c2.genre)) " +
+            "  ORDER BY AVG(r.rating) DESC " +
+            "  LIMIT 3 " +
+            ") topr ON UPPER(TRIM(c.genre)) = topr.g " +
+            "LEFT JOIN rating r2 ON r2.user_id = :userId AND r2.content_id = c.id " +
+            "WHERE r2.content_id IS NULL " +
+            "ORDER BY c.average_rating DESC " +
+            "LIMIT " + Math.max(1, limit);
         
         Map<String, Object> params = new HashMap<>();
         params.put("userId", user.getId());
-        params.put("limit", limit);
         
         return jdbcTemplate.query(sql, params, new ContentRowMapper());
     }

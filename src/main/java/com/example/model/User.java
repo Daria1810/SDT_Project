@@ -1,9 +1,8 @@
 package com.example.model;
 import java.time.LocalDateTime;
 
-/**
- * User account entity
- */
+//user of the streaming service
+
 public class User {
     private Long id;
     private String email;

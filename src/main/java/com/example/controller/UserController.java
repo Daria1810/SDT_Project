@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * REST endpoints for registering and retrieving users.
- */
+
+//REST endpoints for registering and retrieving users.
+ 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

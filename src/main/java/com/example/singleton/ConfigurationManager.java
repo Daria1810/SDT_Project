@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Loads application configuration once and makes it available everywhere.
- * Reads application.properties on the classpath and overlays environment variables.
- */
+
+//loads application configuration once and makes it available everywhere.
+//reads application.properties on the classpath and overlays environment variables.
+ 
 public class ConfigurationManager {
     private static volatile ConfigurationManager instance;
     private Properties properties;

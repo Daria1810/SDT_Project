@@ -1,9 +1,8 @@
 package com.example.observer;
 import java.time.LocalDateTime;
 
-/**
- * Base class for domain events emitted by the app.
- */
+//abstract base class for events in the observer pattern
+
 public abstract class Event {
     private LocalDateTime timestamp;
     private Long userId;

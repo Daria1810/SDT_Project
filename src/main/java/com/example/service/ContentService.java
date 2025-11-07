@@ -16,10 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Handles creating and looking up content (movies and series).
- * Uses small factories to build the right content type.
- */
+//handles creating and looking up content (movies and series)
+//uses small factories to build the right content type
 @Service
 public class ContentService {
     @Autowired
@@ -27,9 +25,7 @@ public class ContentService {
     
     private CacheManager cacheManager = CacheManager.getInstance();
     
-    /**
-     * Create a new movie record.
-     */
+    //create a new movie record
     public Content createMovie(String title, String description, String genre, int releaseYear, int durationMinutes) {
         ContentFactory factory = new MovieFactory(title, description, genre, releaseYear, durationMinutes);
         Content content = factory.createContent();

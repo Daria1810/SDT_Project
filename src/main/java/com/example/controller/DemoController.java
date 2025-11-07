@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Demo endpoints that walk through how the pieces work together.
- */
+
+//demo endpoints that walk through how the pieces work together.
+ 
 @RestController
 @RequestMapping("/api/demo")
 public class DemoController {

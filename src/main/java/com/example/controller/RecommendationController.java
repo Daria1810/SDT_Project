@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * REST endpoints for generating content recommendations.
- */
+
+//REST endpoints for generating content recommendations.
+ 
 @RestController
 @RequestMapping("/api/recommendations")
 public class RecommendationController {
@@ -36,10 +36,11 @@ public class RecommendationController {
         }
         
         List<Content> recommendations = recommendationService.getRecommendations(user, limit);
-        
+
         response.put("success", true);
         response.put("recommendations", recommendations);
         response.put("count", recommendations.size());
+        response.put("strategyUsed", recommendationService.getCurrentStrategyName());
         response.put("message", "Recommendations generated using Strategy Pattern");
         return response;
     }

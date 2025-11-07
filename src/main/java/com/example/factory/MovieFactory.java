@@ -4,9 +4,9 @@ import com.example.model.Content;
 import com.example.model.Movie;
 import java.time.LocalDateTime;
 
-/**
- * Builds Movie objects from provided fields.
- */
+
+//builds Movie objects from provided fields.
+
 public class MovieFactory implements ContentFactory {
     private String title;
     private String description;

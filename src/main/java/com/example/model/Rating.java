@@ -1,9 +1,8 @@
 package com.example.model;
 import java.time.LocalDateTime;
 
-/**
- * User rating for content (1-5 stars)
- */
+//user rating for content (1-5 stars)
+
 public class Rating {
     private Long id;
     private Long userId;
