@@ -8,7 +8,7 @@ For Milestone 3 we had to analyze different software architectures and figure ou
 
 1. **Monolithic** - what we have now
 2. **Microservices** - what we'll probably move to 
-3. **Event-Driven** - cool but maybe overkill
+3. **Event-Driven** - overkill
 
 ## Files
 
