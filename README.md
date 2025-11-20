@@ -12,7 +12,7 @@ For Milestone 3 we had to analyze different software architectures and figure ou
 
 ## Files
 
-- `Milestone_3_-_SDT.pdf` - the full analysis document with diagrams and everything
+- `Milestone 3 - SDT.pdf` - the full analysis document with diagrams and everything
 - Architecture diagrams (in the PDF):
   - Component diagrams for each architecture
   - Deployment diagrams showing how stuff would actually run
@@ -43,13 +43,6 @@ Everything talks through Kafka events instead of direct calls.
 **Good**: Super loose coupling, can replay events, audit trail  
 **Bad**: Eventual consistency issues, harder to debug, steep learning curve
 
-## How to Run
-
-Nothing to run for this milestone - it's just analysis and documentation. But for reference:
-```bash
-# Our current monolith (from Milestone 2)
-mvn spring-boot:run
-```
 
 ## Design Patterns Mapping
 
