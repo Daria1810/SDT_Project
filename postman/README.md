@@ -1,125 +1,152 @@
- StreamFlix Postman Collection
+# StreamFlix Postman Collection
 
-  Complete API Collection ( Requests)
+## Essential API Collection (30 Requests)
 
-This Postman collection provides comprehensive testing coverage for all StreamFlix microservices.
+This Postman collection provides comprehensive testing coverage for all StreamFlix microservices with essential endpoints only.
 
- ️ Architecture Overview
+## ⚙️ Architecture Overview
 
-- API Gateway: `http://localhost:` (Routes all API calls)
-- User Service: Port  (Singleton Pattern - ConfigurationManager)
-- Content Service: Port  (Factory Pattern - MovieFactory, TVSeriesFactory)
-- Video Service: Port  (Observer Pattern - Watch/Rating events trigger observers)
-- Recommendation Service: Port  (Strategy Pattern - TrendingStrategy, HistoryBasedStrategy, RatingBasedStrategy)
+- API Gateway: `http://localhost:8080` (Routes all API calls)
+- User Service: Port 8081 (Singleton Pattern - ConfigurationManager)
+- Content Service: Port 8082 (Factory Pattern - MovieFactory, TVSeriesFactory)
+- Video Service: Port 8083 (Observer Pattern - Watch/Rating events trigger observers)
+- Recommendation Service: Port 8084 (Strategy Pattern - TrendingStrategy, HistoryBasedStrategy, RatingBasedStrategy)
 
 ---
 
-  Collection Contents
+## 📋 Collection Contents
 
- Total Requests: 
+### Total Requests: 30
 
-. Health Checks ( requests)
+1. **Health Checks (5 requests)**
    - Gateway, User, Content, Video, Recommendation health endpoints
 
-. User Service - Singleton Pattern ( requests)
-   - User registration (BASIC, STANDARD, PREMIUM tiers)
-   - Login with JWT token generation
-   - User management (get, update, delete)
+2. **User Service - Singleton Pattern (6 requests)**
+   - User registration and login
+   - User management
    - Singleton pattern demonstration endpoints
 
-. Content Service - Factory Pattern ( requests)
+3. **Content Service - Factory Pattern (7 requests)**
    - Create movies and TV series (Factory pattern in action)
    - Search and filter content by genre
-   - Get top-rated and most-viewed content
+   - Get top-rated content
    - Factory pattern demonstration endpoints
 
-. Video Service - Observer Pattern ( requests)
+4. **Video Service - Observer Pattern (6 requests)**
    - Record watch events (triggers AnalyticsObserver + RecommendationUpdateObserver)
    - Rate content (triggers observers)
    - Get watch history and ratings
    - Observer pattern demonstration endpoints
 
-. Recommendation Service - Strategy Pattern ( requests)
+5. **Recommendation Service - Strategy Pattern (6 requests)**
    - Get personalized recommendations (Strategy pattern dynamically selects algorithm)
    - Update user preferences
-   - Get trending and similar content
+   - Get trending and personalized feed
    - Strategy pattern demonstration endpoints
 
-. Error Handling Tests ( requests)
-   - Invalid registrations, non-existent resources, validation errors
-
 ---
 
-  How to Import
+## 📥 How to Import
 
- Step : Import Collection
+### Step 1: Import Collection
 
-. Open Postman
-. Click Import button (top-left corner)
-. Select File tab
-. Choose `StreamFlix_Complete_Collection.postman_collection.json`
-. Click Import
+1. Open Postman
+2. Click **Import** button (top-left corner)
+3. Select **File** tab
+4. Choose `StreamFlix_Essential_Collection.postman_collection.json`
+5. Click **Import**
 
- Step : Using the Collection
+### Step 2: Using the Collection
 
-The collection includes automatic variable management:
-- Variables like `userId`, `contentId`, `movieId`, etc. are automatically captured from responses
-- Test scripts automatically save IDs for subsequent requests
-- All variables are scoped to the collection (no separate environment needed)
+The collection uses hardcoded URLs for immediate usability:
+- All requests point to `http://localhost:8080/api`
+- No environment variables needed
+- Ready to use immediately after import
 
- Step : Run Requests in Order
+### Step 3: Run Requests in Order
 
 Recommended flow:
-. Start with Health Checks to verify all services are running
-. Run User Service requests - to create users (captures `userId`)
-. Run Content Service requests - to create content (captures `contentId`, `movieId`)
-. Run Video Service requests - to record watch events and ratings
-. Run Recommendation Service requests to see personalized recommendations
+1. Start with **Health Checks** to verify all services are running
+2. Run **User Service** requests (6-11) to create users
+3. Run **Content Service** requests (12-18) to create content
+4. Run **Video Service** requests (19-24) to record watch events and ratings
+5. Run **Recommendation Service** requests (25-30) to see personalized recommendations
 
 ---
 
-  Built-in Variables
+## 🎯 Request Descriptions
 
-The collection automatically manages these variables:
+### 01 Health Checks (5 requests)
 
-| Variable | Description | Set By |
-|----------|-------------|---------|
-| `baseUrl` | API Gateway base URL | Pre-configured: `http://localhost:/api` |
-| `gatewayUrl` | Gateway root URL | Pre-configured: `http://localhost:` |
-| `userId` | Last created/retrieved user ID | Auto-captured from User registration |
-| `contentId` | Last created content ID | Auto-captured from Content creation |
-| `movieId` | Last created movie ID | Auto-captured from Movie creation |
-| `seriesId` | Last created TV series ID | Auto-captured from Series creation |
-| `watchEventId` | Last created watch event ID | Auto-captured from Watch event |
-| `ratingId` | Last created rating ID | Auto-captured from Rating creation |
-| `jwtToken` | JWT authentication token | Auto-captured from Login |
+1. **Gateway Health** - Checks API Gateway status and shows status of all backend services
+2. **User Service Health** - Verifies User Service is running and accessible
+3. **Content Service Health** - Verifies Content Service is running and accessible
+4. **Video Service Health** - Verifies Video Service is running and accessible
+5. **Recommendation Service Health** - Verifies Recommendation Service is running and accessible
+
+### 02 User Service - Singleton Pattern (6 requests)
+
+6. **Register User** - Creates a new user account with email, username, and password
+7. **Login User** - Authenticates user with email and password, returns JWT token
+8. **Get All Users** - Retrieves list of all registered users in the system
+9. **Singleton Demo** - Demonstrates Singleton pattern by showing ConfigurationManager usage
+10. **Get Config (Singleton)** - Returns current ConfigurationManager instance settings
+11. **Verify Singleton Test** - Confirms that only one ConfigurationManager instance exists across multiple requests
+
+### 03 Content Service - Factory Pattern (7 requests)
+
+12. **Create Movie (Factory)** - Uses Factory pattern to create a Movie content item with duration
+13. **Create TV Series (Factory)** - Uses Factory pattern to create a TV Series with seasons/episodes
+14. **Get All Content** - Retrieves complete list of all content (movies and TV series)
+15. **Search Content** - Searches content by title keyword
+16. **Get by Genre** - Filters content by specific genre (e.g., Action, Drama, Sci-Fi)
+17. **Get Top Rated** - Returns highest-rated content based on user ratings
+18. **Factory Pattern Demo** - Demonstrates Factory pattern by showing how different content types are created
+
+### 04 Video Service - Observer Pattern (6 requests)
+
+19. **Record Watch Event (Observer)** - Records when user watches content, triggers observer notifications
+20. **Rate Content (Observer)** - Allows user to rate content (1-5 stars), triggers observer notifications
+21. **Get Watch History** - Retrieves user's complete watch history with timestamps
+22. **Observer Pattern Demo** - Demonstrates Observer pattern showing event notifications
+23. **List Observers** - Shows all registered observers listening to video events
+24. **Observer Status** - Displays current state of observer pattern implementation
+
+### 05 Recommendation Service - Strategy Pattern (6 requests)
+
+25. **Get Recommendations (Strategy)** - Gets personalized content recommendations using selected strategy algorithm
+26. **Update User Preferences** - Updates user's preferred genres to improve recommendations
+27. **Strategy Pattern Demo** - Demonstrates Strategy pattern with different recommendation algorithms
+28. **List All Strategies** - Shows all available recommendation strategy algorithms
+29. **Get Trending Content** - Returns currently trending content across all users
+30. **Get Personalized Feed** - Generates personalized content feed based on user preferences and watch history
 
 ---
 
-  Design Pattern Demonstrations
+## 🎨 Design Pattern Demonstrations
 
- Singleton Pattern (User Service)
-- Requests -: Demonstrate ConfigurationManager singleton
+### Singleton Pattern (User Service)
+- Requests 9-11: Demonstrate ConfigurationManager singleton
 - The same instance is shared across all user service operations
 - Configuration is centralized and thread-safe
 
- Factory Method Pattern (Content Service)
-- Requests -: Create different content types (Movie vs TV Series)
+### Factory Method Pattern (Content Service)
+- Requests 12-13: Create different content types (Movie vs TV Series)
 - MovieFactory and TVSeriesFactory create appropriate content objects
-- Request  shows factory pattern in action
+- Request 18 shows factory pattern in action
 
- Observer Pattern (Video Service)
-- Requests , : Watch events and ratings trigger multiple observers
+### Observer Pattern (Video Service)
+- Requests 19-20: Watch events and ratings trigger multiple observers
 - AnalyticsObserver tracks metrics
 - RecommendationUpdateObserver updates user preferences
-- Requests - demonstrate observer notifications
+- Requests 22-24 demonstrate observer notifications
 
- Strategy Pattern (Recommendation Service)
-- Request : Dynamically selects recommendation algorithm
+### Strategy Pattern (Recommendation Service)
+- Request 25: Dynamically selects recommendation algorithm
   - TrendingStrategy for new users
   - HistoryBasedStrategy for users with watch history
   - RatingBasedStrategy for users with ratings
-- Requests - show strategy selection logic
+- Requests 27-28 show strategy selection logic
 
 ---
 

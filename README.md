@@ -40,7 +40,7 @@ StreamFlix is a proof-of-concept microservices application that demonstrates fou
 - **Backend**: Java 17, Spring Boot 3.2.0, Spring Cloud Gateway
 - **Database**: PostgreSQL 15 (4 instances - one per service)
 - **Containerization**: Docker, Docker Compose
-- **API Testing**: Postman (67 requests)
+- **API Testing**: Postman (30 essential requests)
 - **Build Tool**: Maven 3.8+
 
 ---
