@@ -1,0 +1,57 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: video-service
+  
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5434/videodb}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.example.videoservice: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# External service URLs
+content:
+  service:
+    url: ${CONTENT_SERVICE_URL:http://localhost:8082}
+
+recommendation:
+  service:
+    url: ${RECOMMENDATION_SERVICE_URL:http://localhost:8084}
+
+# RestTemplate timeout configuration
+rest:
+  connection-timeout: 5000
+  read-timeout: 10000

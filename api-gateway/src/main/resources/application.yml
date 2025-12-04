@@ -1,0 +1,128 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 30s
+      
+      routes:
+        - id: user-service
+          uri: ${USER_SERVICE_URL:http://user-service:8081}
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - AddRequestHeader=X-Gateway-Request, api-gateway
+            - name: CircuitBreaker
+              args:
+                name: userServiceCircuitBreaker
+                fallbackUri: forward:/fallback/user-service
+        
+        - id: content-service
+          uri: ${CONTENT_SERVICE_URL:http://content-service:8082}
+          predicates:
+            - Path=/api/content/**
+          filters:
+            - AddRequestHeader=X-Gateway-Request, api-gateway
+            - name: CircuitBreaker
+              args:
+                name: contentServiceCircuitBreaker
+                fallbackUri: forward:/fallback/content-service
+        
+        - id: video-service
+          uri: ${VIDEO_SERVICE_URL:http://video-service:8083}
+          predicates:
+            - Path=/api/videos/**
+          filters:
+            - AddRequestHeader=X-Gateway-Request, api-gateway
+            - name: CircuitBreaker
+              args:
+                name: videoServiceCircuitBreaker
+                fallbackUri: forward:/fallback/video-service
+        
+        - id: recommendation-service
+          uri: ${RECOMMENDATION_SERVICE_URL:http://recommendation-service:8084}
+          predicates:
+            - Path=/api/recommendations/**
+          filters:
+            - AddRequestHeader=X-Gateway-Request, api-gateway
+            - name: CircuitBreaker
+              args:
+                name: recommendationServiceCircuitBreaker
+                fallbackUri: forward:/fallback/recommendation-service
+      
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        slowCallDurationThreshold: 5s
+        slowCallRateThreshold: 50
+    instances:
+      userServiceCircuitBreaker:
+        baseConfig: default
+      contentServiceCircuitBreaker:
+        baseConfig: default
+      videoServiceCircuitBreaker:
+        baseConfig: default
+      recommendationServiceCircuitBreaker:
+        baseConfig: default
+
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 30s
+    instances:
+      userServiceCircuitBreaker:
+        baseConfig: default
+      contentServiceCircuitBreaker:
+        baseConfig: default
+      videoServiceCircuitBreaker:
+        baseConfig: default
+      recommendationServiceCircuitBreaker:
+        baseConfig: default
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway,metrics,circuitbreakers
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: INFO
