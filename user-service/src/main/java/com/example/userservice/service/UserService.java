@@ -75,7 +75,18 @@ public class UserService {
             registerDTO.getPassword() + config.getPasswordSalt()
         );
         user.setPassword(hashedPassword);
-        user.setSubscriptionTier(User.SubscriptionTier.BASIC); // Default tier
+        
+        // Set subscription tier from DTO, default to BASIC if not provided
+        if (registerDTO.getTier() != null && !registerDTO.getTier().isEmpty()) {
+            try {
+                user.setSubscriptionTier(User.SubscriptionTier.valueOf(registerDTO.getTier()));
+            } catch (IllegalArgumentException e) {
+                logger.warn("Invalid tier provided: {}, defaulting to BASIC", registerDTO.getTier());
+                user.setSubscriptionTier(User.SubscriptionTier.BASIC);
+            }
+        } else {
+            user.setSubscriptionTier(User.SubscriptionTier.BASIC); // Default tier
+        }
         
         User savedUser = userRepository.save(user);
         logger.info("User registered successfully with ID: {}", savedUser.getId());
@@ -251,6 +262,60 @@ public class UserService {
         
         // This would normally be properly signed with HMAC-SHA256
         return "streamflix." + java.util.Base64.getEncoder().encodeToString(payload.getBytes());
+    }
+    
+    /**
+     * Verify Singleton Pattern Implementation
+     * 
+     * Demonstrates that ConfigurationManager is a true singleton by:
+     * 1. Getting the instance multiple times
+     * 2. Comparing hash codes
+     * 3. Verifying they all point to the same object in memory
+     * 
+     * @return SingletonTestResponse with verification results
+     */
+    public SingletonTestResponse verifySingletonPattern() {
+        logger.info("=== SINGLETON PATTERN VERIFICATION ===");
+        
+        // Get ConfigurationManager instance multiple times
+        ConfigurationManager instance1 = ConfigurationManager.getInstance();
+        ConfigurationManager instance2 = ConfigurationManager.getInstance();
+        ConfigurationManager instance3 = ConfigurationManager.getInstance();
+        
+        // Get hash codes (memory addresses)
+        String hash1 = Integer.toHexString(System.identityHashCode(instance1));
+        String hash2 = Integer.toHexString(System.identityHashCode(instance2));
+        String hash3 = Integer.toHexString(System.identityHashCode(instance3));
+        
+        // Verify all instances are the same
+        boolean allEqual = (instance1 == instance2) && (instance2 == instance3);
+        
+        String message = allEqual 
+            ? "SUCCESS: All instances reference the SAME ConfigurationManager singleton object"
+            : "FAILURE: Instances are different - Singleton pattern violated!";
+        
+        String configDetails = String.format(
+            "JWT Secret: %s, JWT Expiration: %d ms, Password Salt: %s, Rate Limit: %d per minute",
+            instance1.getJwtSecret(),
+            instance1.getJwtExpirationMs(),
+            instance1.getPasswordSalt(),
+            instance1.getRateLimit()
+        );
+        
+        logger.info("Singleton Test Result: {}", allEqual ? "PASS" : "FAIL");
+        logger.info("Instance 1 HashCode: {}", hash1);
+        logger.info("Instance 2 HashCode: {}", hash2);
+        logger.info("Instance 3 HashCode: {}", hash3);
+        
+        return new SingletonTestResponse(
+            allEqual,
+            message,
+            hash1,
+            hash2,
+            hash3,
+            allEqual,
+            configDetails
+        );
     }
     
     /**

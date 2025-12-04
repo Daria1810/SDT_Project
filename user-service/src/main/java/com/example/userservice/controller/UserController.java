@@ -172,6 +172,22 @@ public class UserController {
     }
     
     /**
+     * Singleton pattern demonstration endpoint
+     * GET /api/users/demo/singleton-test
+     * 
+     * Demonstrates that ConfigurationManager is a true singleton
+     * by getting the instance multiple times and comparing
+     * 
+     * Response: 200 OK with singleton verification
+     */
+    @GetMapping("/demo/singleton-test")
+    public ResponseEntity<SingletonTestResponse> singletonTest() {
+        logger.info("GET /api/users/demo/singleton-test - Running singleton pattern verification");
+        SingletonTestResponse response = userService.verifySingletonPattern();
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
      * Inner class for subscription response
      */
     public static class SubscriptionResponse {

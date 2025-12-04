@@ -1,0 +1,755 @@
+{
+  "info": {
+    "_postman_id": "streamflix-complete-v1",
+    "name": "StreamFlix Microservices - Complete Collection (60+ Requests)",
+    "description": "Complete Postman collection for StreamFlix with all 4 design patterns.\n\n**Architecture:**\n- API Gateway: 8080\n- User Service: 8081 (Singleton)\n- Content Service: 8082 (Factory)\n- Video Service: 8083 (Observer)\n- Recommendation Service: 8084 (Strategy)\n\n**Total Requests: 62**",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 Health Checks (6)",
+      "item": [
+        {
+          "name": "1. Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/actuator/health"
+          }
+        },
+        {
+          "name": "2. User Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/health"
+          }
+        },
+        {
+          "name": "3. Content Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/health"
+          }
+        },
+        {
+          "name": "4. Video Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/health"
+          }
+        },
+        {
+          "name": "5. Recommendation Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/health"
+          }
+        },
+        {
+          "name": "6. All Services Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/actuator/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 User Service - Singleton (15)",
+      "item": [
+        {
+          "name": "7. Register User - BASIC",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('User created', () => pm.expect(pm.response.code).to.be.oneOf([200,201]));",
+                "if(pm.response.json().id) pm.environment.set('userId', pm.response.json().id);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"basic_user\",\"email\":\"basic@streamflix.com\",\"password\":\"Basic123!\",\"tier\":\"BASIC\"}"
+            },
+            "url": "{{baseUrl}}/users/register"
+          }
+        },
+        {
+          "name": "8. Register User - STANDARD",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"standard_user\",\"email\":\"standard@streamflix.com\",\"password\":\"Standard123!\",\"tier\":\"STANDARD\"}"
+            },
+            "url": "{{baseUrl}}/users/register"
+          }
+        },
+        {
+          "name": "9. Register User - PREMIUM",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if(pm.response.json().id) {",
+                "  pm.environment.set('userId', pm.response.json().id);",
+                "  pm.environment.set('premiumUserId', pm.response.json().id);",
+                "}"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"premium_user\",\"email\":\"premium@streamflix.com\",\"password\":\"Premium123!\",\"tier\":\"PREMIUM\"}"
+            },
+            "url": "{{baseUrl}}/users/register"
+          }
+        },
+        {
+          "name": "10. Login User",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if(pm.response.json().token) pm.environment.set('jwtToken', pm.response.json().token);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"premium@streamflix.com\",\"password\":\"Premium123!\"}"
+            },
+            "url": "{{baseUrl}}/users/login"
+          }
+        },
+        {
+          "name": "11. Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "12. Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "13. Update User Subscription",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tier\":\"PREMIUM\"}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}/subscription"
+          }
+        },
+        {
+          "name": "14. Get User by Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/email/premium@streamflix.com"
+          }
+        },
+        {
+          "name": "15. Singleton Demo - Config Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/singleton/demo"
+          }
+        },
+        {
+          "name": "16. Singleton Demo - Get Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/config"
+          }
+        },
+        {
+          "name": "17. Singleton Verification Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/singleton/verify"
+          }
+        },
+        {
+          "name": "18. Get User Preferences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/{{userId}}/preferences"
+          }
+        },
+        {
+          "name": "19. Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"updated_premium_user\"}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "20. Get User Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/{{userId}}/stats"
+          }
+        },
+        {
+          "name": "21. Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/users/999"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Content Service - Factory (15)",
+      "item": [
+        {
+          "name": "22. Create Movie - Factory Pattern",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if(pm.response.json().id) {",
+                "  pm.environment.set('contentId', pm.response.json().id);",
+                "  pm.environment.set('movieId', pm.response.json().id);",
+                "}"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\":\"MOVIE\",\"title\":\"Inception\",\"description\":\"Dream thriller\",\"genre\":\"Sci-Fi\",\"releaseYear\":2010,\"duration\":148,\"director\":\"Christopher Nolan\"}"
+            },
+            "url": "{{baseUrl}}/content"
+          }
+        },
+        {
+          "name": "23. Create TV Series - Factory Pattern",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if(pm.response.json().id) pm.environment.set('seriesId', pm.response.json().id);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\":\"TV_SERIES\",\"title\":\"Stranger Things\",\"description\":\"Supernatural drama\",\"genre\":\"Drama\",\"releaseYear\":2016,\"seasons\":4,\"episodesPerSeason\":8}"
+            },
+            "url": "{{baseUrl}}/content"
+          }
+        },
+        {
+          "name": "24. Create Action Movie",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\":\"MOVIE\",\"title\":\"Mad Max\",\"description\":\"Post-apocalyptic action\",\"genre\":\"Action\",\"releaseYear\":2015,\"duration\":120,\"director\":\"George Miller\"}"
+            },
+            "url": "{{baseUrl}}/content"
+          }
+        },
+        {
+          "name": "25. Create Comedy Series",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\":\"TV_SERIES\",\"title\":\"The Office\",\"description\":\"Mockumentary sitcom\",\"genre\":\"Comedy\",\"releaseYear\":2005,\"seasons\":9,\"episodesPerSeason\":24}"
+            },
+            "url": "{{baseUrl}}/content"
+          }
+        },
+        {
+          "name": "26. Get All Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content"
+          }
+        },
+        {
+          "name": "27. Get Content by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/{{contentId}}"
+          }
+        },
+        {
+          "name": "28. Get Movies Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/movies"
+          }
+        },
+        {
+          "name": "29. Get TV Series Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/series"
+          }
+        },
+        {
+          "name": "30. Search Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/search?query=Inception"
+          }
+        },
+        {
+          "name": "31. Get Content by Genre - Action",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/genre/Action"
+          }
+        },
+        {
+          "name": "32. Get Content by Genre - Sci-Fi",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/genre/Sci-Fi"
+          }
+        },
+        {
+          "name": "33. Get Content by Genre - Drama",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/genre/Drama"
+          }
+        },
+        {
+          "name": "34. Get Top Rated Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/top-rated"
+          }
+        },
+        {
+          "name": "35. Get Most Viewed Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/most-viewed"
+          }
+        },
+        {
+          "name": "36. Factory Pattern Demo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/factory/demo"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Video Service - Observer (15)",
+      "item": [
+        {
+          "name": "37. Record Watch Event - Triggers Observers",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if(pm.response.json().id) pm.environment.set('watchEventId', pm.response.json().id);",
+                "console.log('Observer pattern triggered: AnalyticsObserver + RecommendationUpdateObserver');"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":{{userId}},\"contentId\":{{contentId}},\"progress\":3600,\"completed\":true}"
+            },
+            "url": "{{baseUrl}}/videos/watch"
+          }
+        },
+        {
+          "name": "38. Record Another Watch Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":{{userId}},\"contentId\":{{movieId}},\"progress\":1800,\"completed\":false}"
+            },
+            "url": "{{baseUrl}}/videos/watch"
+          }
+        },
+        {
+          "name": "39. Rate Content - Triggers Observers",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if(pm.response.json().id) pm.environment.set('ratingId', pm.response.json().id);",
+                "console.log('Observer pattern triggered: AnalyticsObserver + RecommendationUpdateObserver');"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":{{userId}},\"contentId\":{{contentId}},\"score\":5.0}"
+            },
+            "url": "{{baseUrl}}/videos/rate"
+          }
+        },
+        {
+          "name": "40. Rate Another Content",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":{{userId}},\"contentId\":{{movieId}},\"score\":4.5}"
+            },
+            "url": "{{baseUrl}}/videos/rate"
+          }
+        },
+        {
+          "name": "41. Get User Watch History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/watch/user/{{userId}}"
+          }
+        },
+        {
+          "name": "42. Get User Ratings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/rate/user/{{userId}}"
+          }
+        },
+        {
+          "name": "43. Get Watch Event by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/watch/{{watchEventId}}"
+          }
+        },
+        {
+          "name": "44. Get Rating by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/rate/{{ratingId}}"
+          }
+        },
+        {
+          "name": "45. Get User Average Rating",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/rate/user/{{userId}}/average"
+          }
+        },
+        {
+          "name": "46. Get Content Average Rating",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/rate/content/{{contentId}}/average"
+          }
+        },
+        {
+          "name": "47. Get All Watch Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/watch"
+          }
+        },
+        {
+          "name": "48. Get All Ratings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/rate"
+          }
+        },
+        {
+          "name": "49. Observer Pattern Demo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/observers/demo"
+          }
+        },
+        {
+          "name": "50. Get Active Observers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/observers/list"
+          }
+        },
+        {
+          "name": "51. Verify Observer Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/videos/observers/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Recommendation Service - Strategy (10)",
+      "item": [
+        {
+          "name": "52. Get Recommendations - Strategy Pattern",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/{{userId}}?limit=5"
+          }
+        },
+        {
+          "name": "53. Get Recommendations for New User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/1?limit=10"
+          }
+        },
+        {
+          "name": "54. Get User Preferences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/preferences/{{userId}}"
+          }
+        },
+        {
+          "name": "55. Update User Preferences",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":{{userId}},\"contentId\":{{contentId}},\"interactionType\":\"WATCH\"}"
+            },
+            "url": "{{baseUrl}}/recommendations/preferences/update"
+          }
+        },
+        {
+          "name": "56. Strategy Pattern Demo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/strategy/demo"
+          }
+        },
+        {
+          "name": "57. Get All Strategies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/strategy/list"
+          }
+        },
+        {
+          "name": "58. Get Current Strategy for User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/strategy/current/{{userId}}"
+          }
+        },
+        {
+          "name": "59. Get Trending Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/trending?limit=10"
+          }
+        },
+        {
+          "name": "60. Get Similar Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/similar/{{contentId}}"
+          }
+        },
+        {
+          "name": "61. Get Personalized Feed",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/recommendations/{{userId}}/feed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Error Handling Tests (6)",
+      "item": [
+        {
+          "name": "62. Invalid User Registration",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"\",\"email\":\"invalid\",\"password\":\"123\"}"
+            },
+            "url": "{{baseUrl}}/users/register"
+          }
+        },
+        {
+          "name": "63. Duplicate Email Registration",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"test\",\"email\":\"premium@streamflix.com\",\"password\":\"Test123!\"}"
+            },
+            "url": "{{baseUrl}}/users/register"
+          }
+        },
+        {
+          "name": "64. Get Non-existent User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/99999"
+          }
+        },
+        {
+          "name": "65. Get Non-existent Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/content/99999"
+          }
+        },
+        {
+          "name": "66. Invalid Watch Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":99999,\"contentId\":99999,\"progress\":-100}"
+            },
+            "url": "{{baseUrl}}/videos/watch"
+          }
+        },
+        {
+          "name": "67. Invalid Rating Score",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\":{{userId}},\"contentId\":{{contentId}},\"score\":10.0}"
+            },
+            "url": "{{baseUrl}}/videos/rate"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "contentId",
+      "value": ""
+    },
+    {
+      "key": "movieId",
+      "value": ""
+    },
+    {
+      "key": "seriesId",
+      "value": ""
+    },
+    {
+      "key": "watchEventId",
+      "value": ""
+    },
+    {
+      "key": "ratingId",
+      "value": ""
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    }
+  ]
+}

@@ -1,387 +1,586 @@
-# StreamFlix - Microservices Architecture# StreamFlix — SDT Project
+# StreamFlix - Microservices Video Streaming Platform
 
-Team: Bilciurescu Elena-Alina, Solomon Miruna-Maria, Toma Daria-Maria (1241EA)
+A Netflix-like video streaming platform demonstrating microservices architecture and design patterns.
 
-**A Netflix-like video streaming platform demonstrating microservices architecture and design patterns**
-
-Group 1241EA CTI-E.
+**Team:** Bilciurescu Elena-Alina, Solomon Miruna-Maria, Toma Daria-Maria  
+**Group:** 1241EA CTI-E  
+**Course:** Software Design Techniques  
+**Target Grade:** 10/10
 
 ---
 
-This repository contains a proof‑of‑concept (Milestone 2) Spring Boot application demonstrating four non‑trivial design patterns (Factory Method, Strategy, Observer, Singleton) for a video streaming platform.
+## Table of Contents
 
-## 📋 Project Information
+- [Project Overview](#project-overview)
+- [Architecture](#architecture)
+- [Design Patterns](#design-patterns)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Team](#team)
 
-## How to run (POC)
+---
 
-- **Team:** Bilciurescu Elena-Alina, Solomon Miruna-Maria, Toma Daria-Maria- Java 11+, Maven
+## Project Overview
 
-- **Group:** 1241EA CTI-E- Start: `mvn spring-boot:run -DskipTests`
+StreamFlix is a proof-of-concept microservices application that demonstrates four non-trivial design patterns (Factory Method, Strategy, Observer, Singleton) integrated into a video streaming platform architecture.
 
-- **Course:** Software Design Techniques- UI: http://localhost:8080/
+### Core Features
 
-- **Milestone:** 4 - Microservices Architecture- H2 Console: http://localhost:8080/h2-console (JDBC: `jdbc:h2:mem:streamflix`, user `sa`, password empty)
+- **User Management**: Registration, authentication, subscription tiers (BASIC, STANDARD, PREMIUM)
+- **Content Catalog**: Movies and TV Series with search and filtering
+- **Video Streaming**: Watch events, progress tracking, watch history
+- **Rating System**: 1-5 star ratings that influence recommendations
+- **Recommendation Engine**: Personalized content suggestions using multiple algorithms
+- **Real-time Notifications**: Event-driven architecture with observer pattern
 
-- **Target Grade:** 10/10
+### Technology Stack
 
-## Milestone 2 quick links
+- **Backend**: Java 17, Spring Boot 3.2.0, Spring Cloud Gateway
+- **Database**: PostgreSQL 15 (4 instances - one per service)
+- **Containerization**: Docker, Docker Compose
+- **API Testing**: Postman (67 requests)
+- **Build Tool**: Maven 3.8+
 
----- Class diagram: `docs/diagrams/ClassDiagram.png`
+---
 
-- Sequence (watch + recommend): `docs/diagrams/SeqDiagram1.png`
+## Architecture
 
-## 🏗️ Architecture Overview- Sequence (add content): `docs/diagrams/SeqDiagram2.png`
-
-
-
-```---
-
-CLIENT → API GATEWAY (8080) → User Service (8081)
-
-                             → Content Service (8082)# Milestone 2 — Design and Implementation
-
-                             → Video Service (8083)
-
-                             → Recommendation Service (8084)## UML Diagrams
-
-```
-
-### Class Diagram
-
-### Services & Design PatternsThe class diagram shows all four design patterns integrated into the StreamFlix architecture. Each pattern is annotated directly on the diagram over the relevant participants.
-
-
-
-| Service | Port | Pattern | Purpose |**Patterns demonstrated:**
-
-|---------|------|---------|---------|- **Factory Method**: `ContentFactory` interface with `MovieFactory` and `TVSeriesFactory` implementations
-
-| User Service | 8081 | **Singleton** | User management with ConfigurationManager |- **Strategy**: `RecommendationStrategy` interface with three concrete strategies
-
-| Content Service | 8082 | **Factory** | Content catalog with MovieFactory/TVSeriesFactory |- **Observer**: `EventPublisher` with multiple observers reacting to system events
-
-| Video Service | 8083 | **Observer** | Watch events with REST-based notifications |- **Singleton**: `DatabaseConnectionPool`, `CacheManager`, and `ConfigurationManager`
-
-| Recommendation Service | 8084 | **Strategy** | Personalized recommendations with algorithm selection |
-
-| API Gateway | 8080 | Gateway | Request routing and CORS |![Class Diagram](docs/diagrams/ClassDiagram.png)
-
-
-
----### Sequence Diagrams
-
-
-
-## 🚀 Quick Start#### Sequence Diagram 1: User Watches Content and Gets Recommendations
-
-This diagram illustrates the main user workflow showing:
-
-### Prerequisites1. User streams video content
-
-- Docker Desktop2. Progress is recorded and triggers `VideoWatchedEvent`
-
-- Java 17 JDK3. Multiple observers react in parallel (Observer Pattern)
-
-- Maven 3.8+4. User requests recommendations
-
-- Postman5. Strategy is selected based on user state (Strategy Pattern)
-
-6. Singleton resources are accessed throughout
-
-### Build & Run
-
-**Patterns demonstrated:** Observer, Strategy, Singleton
-
-```bash
-
-# Build all services![Sequence Diagram 1](docs/diagrams/SeqDiagram1.png)
-
-./build-all.sh  # or build-all.bat on Windows
-
-#### Sequence Diagram 2: Admin Adds New Content
-
-# Start with DockerThis diagram shows the content management workflow:
-
-docker-compose up -d1. Admin adds new content via API
-
-2. Appropriate factory creates Movie or TVSeries (Factory Method Pattern)
-
-# Verify services3. Content is persisted to database
-
-docker-compose ps4. `ContentAddedEvent` is published (Observer Pattern)
-
-5. Observers send notifications and initialize analytics
-
-# View logs
-
-docker-compose logs -f**Patterns demonstrated:** Factory Method, Observer, Singleton
+### Microservices Architecture
 
 ```
-
-![Sequence Diagram 2](docs/diagrams/SeqDiagram2.png)
-
-### Health Checks
-
-- API Gateway: http://localhost:8080/actuator/health## Implementation Overview
-
-- User Service: http://localhost:8081/actuator/health
-
-- Content Service: http://localhost:8082/actuator/health### Project Structure
-
-- Video Service: http://localhost:8083/actuator/health```
-
-- Recommendation Service: http://localhost:8084/actuator/healthsrc/main/java/com/streamflix/
-
-├── model/
-
----│   ├── content/         # Content, Movie, TVSeries, Episode
-
-│   ├── user/            # User, Profile, SubscriptionTier
-
-## 🎨 Design Patterns│   └── events/          # Event hierarchy
-
-├── factory/             # Factory Method pattern
-
-### 1. Factory Method (Content Service)│   ├── ContentFactory
-
-Creates different content types (Movie vs TVSeries) with type-specific validation.│   ├── MovieFactory
-
-│   └── TVSeriesFactory
-
-**Why?** Single Content class with nullable fields = no type safety, difficult to extend.├── strategy/            # Strategy pattern
-
-│   ├── RecommendationStrategy
-
-See [DESIGN_PATTERNS.md](./DESIGN_PATTERNS.md) for detailed explanation.│   ├── TrendingStrategy
-
-│   ├── HistoryBasedStrategy
-
-### 2. Strategy (Recommendation Service)│   └── RatingBasedStrategy
-
-Swappable recommendation algorithms based on user data.├── observer/            # Observer pattern
-
-│   ├── EventPublisher
-
-- New user → `TrendingStrategy`│   ├── EventObserver
-
-- User with watch history → `HistoryBasedStrategy`│   └── observers/       # Concrete observers
-
-- User with ratings → `RatingBasedStrategy`├── singleton/           # Singleton pattern
-
-│   ├── DatabaseConnectionPool
-
-**Why?** 200+ line method with if/else = unmaintainable.│   ├── CacheManager
-
-│   └── ConfigurationManager
-
-### 3. Observer (Video Service)└── service/
-
-Multiple services react to watch events without tight coupling.    ├── ContentService
-
-    ├── VideoService
-
-Watch event → VideoEventPublisher → RecommendationUpdateObserver (REST call) + AnalyticsObserver (local DB)    └── RecommendationService
-
+CLIENT
+   |
+   v
+API GATEWAY (Port 8080)
+   |
+   +-- User Service (Port 8081) - Singleton Pattern
+   |
+   +-- Content Service (Port 8082) - Factory Pattern
+   |
+   +-- Video Service (Port 8083) - Observer Pattern
+   |
+   +-- Recommendation Service (Port 8084) - Strategy Pattern
 ```
 
-**Why?** Direct service calls = tight coupling, single point of failure.
+### Database-per-Service
+
+Each microservice has its own PostgreSQL database:
+- `streamflix_user` (Port 5432)
+- `streamflix_content` (Port 5433)
+- `streamflix_video` (Port 5434)
+- `streamflix_recommendation` (Port 5435)
+
+### Services Overview
+
+| Service | Port | Pattern | Purpose | Key Endpoints |
+|---------|------|---------|---------|---------------|
+| **API Gateway** | 8080 | Gateway | Request routing, CORS | `/api/*` |
+| **User Service** | 8081 | Singleton | User management | `/api/users/*` |
+| **Content Service** | 8082 | Factory | Content catalog | `/api/content/*` |
+| **Video Service** | 8083 | Observer | Watch events, ratings | `/api/videos/*` |
+| **Recommendation Service** | 8084 | Strategy | Personalized recommendations | `/api/recommendations/*` |
+
+---
+
+## Design Patterns
+
+### 1. Factory Method Pattern (Content Service)
+
+**Purpose**: Create different content types (Movie vs TV Series) without conditional logic.
+
+**Implementation**:
+- `ContentFactory` interface
+- `MovieFactory` creates `Movie` objects with movie-specific fields (duration, director)
+- `TVSeriesFactory` creates `TVSeries` objects with series-specific fields (seasons, episodes)
+
+**Why?**: 
+- Eliminates if/else statements for content type handling
+- Easy to extend with new content types (Documentaries, Podcasts, etc.)
+- Type-safe content creation with compile-time validation
+
+**Example**:
+```java
+ContentFactory factory = contentType.equals("MOVIE") 
+    ? new MovieFactory() 
+    : new TVSeriesFactory();
+Content content = factory.createContent(dto);
+```
+
+### 2. Strategy Pattern (Recommendation Service)
+
+**Purpose**: Swap recommendation algorithms dynamically based on user behavior.
+
+**Implementation**:
+- `RecommendationStrategy` interface
+- `TrendingStrategy` - For new users without history
+- `HistoryBasedStrategy` - For users with watch history
+- `RatingBasedStrategy` - For users who rate content
+
+**Why?**:
+- Avoids 200+ line methods with complex if/else logic
+- Easy A/B testing by switching strategies
+- Each algorithm is independently testable
+
+**Example**:
+```java
+RecommendationStrategy strategy = selectStrategy(user);
+List<Content> recommendations = strategy.recommend(user, limit);
+```
+
+### 3. Observer Pattern (Video Service)
+
+**Purpose**: Multiple services react to watch events without tight coupling.
+
+**Implementation**:
+- `VideoEventPublisher` publishes watch and rating events
+- `AnalyticsObserver` - Records metrics locally
+- `RecommendationUpdateObserver` - Makes REST call to update recommendations
+- `WatchHistoryObserver` - Updates user's watch history
+
+**Why?**:
+- Decouples event producers from consumers
+- Easy to add new observers without modifying existing code
+- Asynchronous event processing doesn't block main operations
+
+**Example**:
+```java
+// Watch event triggers all registered observers
+publisher.publishWatchEvent(watchEvent);
+// -> AnalyticsObserver logs metrics
+// -> RecommendationUpdateObserver updates recommendations
+// -> WatchHistoryObserver updates history
+```
+
+### 4. Singleton Pattern (User Service)
+
+**Purpose**: Single instance of shared resources (ConfigurationManager).
+
+**Implementation**:
+- `ConfigurationManager` - Manages service-wide configuration
+- Thread-safe lazy initialization with double-checked locking
+- Volatile keyword ensures visibility across threads
+
+**Why?**:
+- Prevents multiple instances wasting memory
+- Ensures consistent configuration across all components
+- Thread-safe access to shared resources
+
+**Example**:
+```java
+ConfigurationManager config = ConfigurationManager.getInstance();
+String jwtSecret = config.getJwtSecret();
+```
 
 ### Pattern Interactions
 
-### 4. Singleton (User Service)
+The patterns work together cohesively:
 
-Single ConfigurationManager instance per service.The patterns work together cohesively:
-
-
-
-**Why?** Multiple instances = memory waste, inconsistent configuration.1. **Factory Method → Observer**: When `ContentService` creates content using factories, it publishes `ContentAddedEvent` through the Observer pattern
-
-2. **Observer → Strategy**: When users watch content, `RecommendationObserver` invalidates cached recommendations, forcing the Strategy pattern to recompute with fresh data
-
----3. **Singleton → All Patterns**: All services and observers use `DatabaseConnectionPool` for persistence and `CacheManager` for performance
-
-4. **Strategy → Observer**: Recommendation strategies analyze data collected by `WatchHistoryObserver` and `AnalyticsObserver`
-
-## 📚 API Documentation
-
-### Key Implementation Details
-
-### User Service (8081)
-
-- `POST /api/users/register` - Register new user**Factory Method Pattern:**
-
-- `POST /api/users/login` - User login- Creates `Movie` and `TVSeries` objects without conditional logic
-
-- `GET /api/users/{id}` - Get user profile- Easy to extend with new content types (Documentaries, Podcasts)
-
-- `PUT /api/users/{id}/subscription` - Update subscription tier- Example: `ContentService.addContent()` uses the factory pattern
-
-
-
-### Content Service (8082)**Strategy Pattern:**
-
-- `POST /api/content` - Create content (Factory Pattern)- Three algorithms: `TrendingStrategy` (new users), `HistoryBasedStrategy` (returning users), `RatingBasedStrategy` (users with ratings)
-
-- `GET /api/content` - List all content- Strategy selection in `RecommendationService.selectStrategy()` based on user data
-
-- `GET /api/content/{id}` - Get content by ID- Easy A/B testing by swapping strategies
-
-- `GET /api/content/search?query={query}` - Search content
-
-**Observer Pattern:**
-
-### Video Service (8083)- Four observers: `WatchHistoryObserver`, `RecommendationObserver`, `AnalyticsObserver`, `NotificationObserver`
-
-- `POST /api/video/watch` - Record watch event (Observer Pattern)- Asynchronous event processing doesn't block main operations
-
-- `GET /api/video/watch-history/{userId}` - Get watch history- Adding new observers (e.g., achievement tracking) requires no changes to publishers
-
-- `POST /api/video/rate` - Rate content
-
-**Singleton Pattern:**
-
-### Recommendation Service (8084)- `DatabaseConnectionPool`: manages 20 connections shared across all services
-
-- `GET /api/recommendations/{userId}` - Get recommendations (Strategy Pattern)- `CacheManager`: single Redis cache instance for all services
-
-- `GET /api/recommendations/trending` - Get trending content- `ConfigurationManager`: loads config once and provides consistent values
-
-- Thread-safe lazy initialization with double-checked locking
+1. **Factory → Observer**: ContentService creates content using factories, then publishes ContentAddedEvent through Observer pattern
+2. **Observer → Strategy**: Watch events collected by observers feed data to recommendation strategies
+3. **Singleton → All**: All services use ConfigurationManager singleton for consistent configuration
+4. **Strategy → Observer**: Recommendation strategies analyze data collected by observers
 
 ---
 
-### Proof of Concept Scope
+## Getting Started
 
-## 🧪 Testing with Postman
+### Prerequisites
 
-This implementation focuses on demonstrating pattern interactions rather than building a complete system:
+- Docker Desktop
+- Java 17 JDK (for local development)
+- Maven 3.8+ (for local development)
+- Postman (for API testing)
 
-1. Import `postman-collection.json` and `postman-environment.json`
+### Quick Start with Docker
 
-2. Select "StreamFlix Environment"**Implemented:**
-
-3. Run folders in order:-  All four design patterns with proper integration
-
-   - User Service Tests-  Content creation and retrieval
-
-   - Content Service Tests - Factory Pattern-  Event publishing and observer notifications
-
-   - Video Service Tests - Observer Pattern-  Recommendation generation with strategy selection
-
-   - Recommendation Service Tests - Strategy Pattern-  Singleton resource sharing
-
-   - Integration Tests-  Basic REST API endpoints
-
--  In-memory H2 database
-
----
-
-**Not implemented (out of scope for POC):**
-
-## 🛠️ Troubleshooting-  JWT authentication
-
--  Video file storage/streaming
-
-**Services won't start?**-  Production-ready caching
-
-```bash-  Email notification sending
-
-docker-compose logs <service-name>-  Complete subscription management
-
-docker-compose build --no-cache-  Frontend UI
-
+**1. Build all services:**
+```bash
+./build-all.sh  # Mac/Linux
+# or
+build-all.bat   # Windows
 ```
 
+**2. Start all services:**
+```bash
+docker-compose up -d
+```
 
+**3. Verify services are running:**
+```bash
+docker-compose ps
+```
 
-**Port already in use?**# Milestone 1 — Project description and pattern selection
+All services should show "Up" and "healthy" status.
+
+**4. Access the UI:**
+```
+http://localhost:8080/ui/index.html
+```
+
+**5. Check health endpoints:**
+- API Gateway: http://localhost:8080/actuator/health
+- User Service: http://localhost:8080/api/users/health
+- Content Service: http://localhost:8080/api/content/health
+- Video Service: http://localhost:8080/api/videos/health
+- Recommendation Service: http://localhost:8080/api/recommendations/health
+
+### Manual Build (without Docker)
 
 ```bash
+# Build each service
+cd user-service && mvn clean package -DskipTests
+cd content-service && mvn clean package -DskipTests
+cd video-service && mvn clean package -DskipTests
+cd recommendation-service && mvn clean package -DskipTests
+cd api-gateway && mvn clean package -DskipTests
+```
 
-lsof -i :8080  # Mac/Linux## StreamFlix - Video Streaming Platform
+### Stopping Services
 
-netstat -ano | findstr :8080  # Windows
-
-```### Team Members
-
-1. **BILCIURESCU ELENA-ALINA** - 1241EA
-
-**Build fails?**2. **SOLOMON MIRUNA-MARIA** - 1241EA
-
-```bash3. **TOMA DARIA-MARIA** - 1241EA
-
-mvn clean
-
-java -version  # Must be Java 17### Project Description
-
-```StreamFlix is a video streaming platform similar to Netflix that allows users to browse, watch, and rate video content. The platform supports user authentication, multiple subscription tiers, content management, personalized recommendations, and real-time notifications.
-
-
-
----#### Core Features
-
-- User Management: registration/authentication (JWT planned), subscription tiers
-
-## 📂 Project Structure- Content Catalog: Movies and TV Series, search/browse, trending
-
-- Video Streaming: continuation and watch history (POC simulates events)
-
-```- Recommendation System: strategies for new/returning users
-
-streamflix/- Rating System: 1–5 stars, ratings impact recs
-
-├── api-gateway/          # Spring Cloud Gateway- Notification System: simulated observer for events
-
-├── user-service/         # Singleton Pattern
-
-├── content-service/      # Factory Pattern### Design Patterns
-
-├── video-service/        # Observer Pattern1. Factory Method — creates different content types (Movie/TVSeries) without conditionals scattered across code.
-
-├── recommendation-service/  # Strategy Pattern2. Strategy — interchangeable recommendation algorithms (Trending, History, Rating) selected at runtime.
-
-├── docker-compose.yml3. Observer — decoupled reactions to events (watch/rate) by multiple observers (history, analytics, notifications).
-
-├── build-all.sh4. Singleton — single instances for shared resources (DB pool, cache, configuration).
-
-├── postman-collection.json
-
-├── README.mdFor additional information, please refer to the README on the [1-teams-and-project-description branch](https://github.com/Daria1810/SDT_Project/tree/1-teams-and-project-description).
-
-└── DESIGN_PATTERNS.md
-
+```bash
+docker-compose down
 ```
 
 ---
 
-## ✅ Grading Checklist
+## API Documentation
 
-- ✅ 4+ independent microservices
-- ✅ Database-per-Service (4 PostgreSQL databases)
-- ✅ All 4 design patterns correctly implemented
-- ✅ Robust inter-service communication with error handling
-- ✅ Comprehensive Postman collection (60+ requests)
-- ✅ Clean Docker setup (one-command startup)
-- ✅ Complete documentation
+### User Service (Port 8081)
+
+**Base URL**: `/api/users`
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| POST | `/register` | Register new user | `{username, email, password, tier}` |
+| POST | `/login` | User login | `{email, password}` |
+| GET | `/{id}` | Get user by ID | - |
+| GET | `/` | Get all users | - |
+| PUT | `/{id}` | Update user profile | `{username, email, password}` |
+| PUT | `/{id}/subscription` | Update subscription tier | `{tier}` |
+| DELETE | `/{id}` | Delete user | - |
+| GET | `/demo/singleton-test` | Test singleton pattern | - |
+
+**Subscription Tiers**: `BASIC`, `STANDARD`, `PREMIUM`
+
+### Content Service (Port 8082)
+
+**Base URL**: `/api/content`
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| POST | `/` | Create content (Factory) | `{type, title, description, genre, releaseYear, ...}` |
+| GET | `/` | Get all content | - |
+| GET | `/{id}` | Get content by ID | - |
+| GET | `/movies` | Get all movies | - |
+| GET | `/series` | Get all TV series | - |
+| GET | `/search?query={q}` | Search content | - |
+| GET | `/genre/{genre}` | Get content by genre | - |
+| GET | `/top-rated` | Get top rated content | - |
+
+**Content Types**: `MOVIE`, `TV_SERIES`
+
+**Movie Fields**: `duration` (minutes), `director`  
+**TV Series Fields**: `seasons`, `episodesPerSeason`
+
+### Video Service (Port 8083)
+
+**Base URL**: `/api/videos`
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| POST | `/watch` | Record watch event (Observer) | `{userId, contentId, progress, completed}` |
+| POST | `/rate` | Rate content (Observer) | `{userId, contentId, score}` |
+| GET | `/watch/user/{userId}` | Get watch history | - |
+| GET | `/rate/user/{userId}` | Get user ratings | - |
+| GET | `/watch/{id}` | Get watch event by ID | - |
+| GET | `/rate/{id}` | Get rating by ID | - |
+| GET | `/rate/content/{contentId}/average` | Get average rating | - |
+
+**Progress**: Seconds watched  
+**Score**: 0.0 to 5.0
+
+### Recommendation Service (Port 8084)
+
+**Base URL**: `/api/recommendations`
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| GET | `/{userId}?limit={n}` | Get recommendations (Strategy) | - |
+| GET | `/trending?limit={n}` | Get trending content | - |
+| GET | `/similar/{contentId}` | Get similar content | - |
+| GET | `/preferences/{userId}` | Get user preferences | - |
+| POST | `/preferences/update` | Update preferences | `{userId, contentId, interactionType}` |
+| GET | `/strategy/demo` | Demo strategy pattern | - |
+| GET | `/strategy/current/{userId}` | Get current strategy | - |
+
+**Strategy Selection**:
+- New user (no history) → `TrendingStrategy`
+- User with watch history → `HistoryBasedStrategy`
+- User with ratings → `RatingBasedStrategy`
 
 ---
 
-## 📚 References
+## Testing
 
-- **Design Patterns:** [Refactoring Guru](https://refactoring.guru/design-patterns)
-- **Spring Boot:** [Documentation](https://spring.io/projects/spring-boot)
-- **Docker:** [Documentation](https://docs.docker.com/)
+### Postman Collection
+
+A comprehensive Postman collection with 67 requests is provided.
+
+**Location**: `postman/StreamFlix_Complete_Collection.postman_collection.json`
+
+**Collection Contents**:
+1. Health Checks (6 requests)
+2. User Service - Singleton Pattern (15 requests)
+3. Content Service - Factory Pattern (15 requests)
+4. Video Service - Observer Pattern (15 requests)
+5. Recommendation Service - Strategy Pattern (10 requests)
+6. Error Handling Tests (6 requests)
+
+**How to Use**:
+1. Open Postman
+2. Import → File → Select `StreamFlix_Complete_Collection.postman_collection.json`
+3. Run requests in order (health checks first)
+4. Variables are auto-captured from responses
+
+### Testing Flow
+
+**Step 1: Health Checks**
+```bash
+curl http://localhost:8080/actuator/health
+```
+
+**Step 2: Register User**
+```bash
+curl -X POST http://localhost:8080/api/users/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"john_doe","email":"john@example.com","password":"Password123!","tier":"PREMIUM"}'
+```
+
+**Step 3: Create Movie (Factory Pattern)**
+```bash
+curl -X POST http://localhost:8080/api/content \
+  -H "Content-Type: application/json" \
+  -d '{"type":"MOVIE","title":"Inception","description":"Dream thriller","genre":"Sci-Fi","releaseYear":2010,"duration":148,"director":"Christopher Nolan"}'
+```
+
+**Step 4: Record Watch Event (Observer Pattern)**
+```bash
+curl -X POST http://localhost:8080/api/videos/watch \
+  -H "Content-Type: application/json" \
+  -d '{"userId":1,"contentId":1,"progress":3600,"completed":true}'
+```
+
+**Step 5: Rate Content**
+```bash
+curl -X POST http://localhost:8080/api/videos/rate \
+  -H "Content-Type: application/json" \
+  -d '{"userId":1,"contentId":1,"score":5.0}'
+```
+
+**Step 6: Get Recommendations (Strategy Pattern)**
+```bash
+curl http://localhost:8080/api/recommendations/1?limit=5
+```
+
+**Step 7: Test Singleton Pattern**
+```bash
+curl http://localhost:8080/api/users/demo/singleton-test
+```
+
+### Viewing Logs
+
+```bash
+# View all logs
+docker-compose logs -f
+
+# View specific service
+docker-compose logs -f user-service
+
+# View pattern-specific logs
+docker-compose logs user-service | grep "ConfigurationManager"  # Singleton
+docker-compose logs content-service | grep -i "factory"         # Factory
+docker-compose logs video-service | grep -i "observer"          # Observer
+docker-compose logs recommendation-service | grep -i "strategy" # Strategy
+```
 
 ---
 
-## 👥 Team
+## Project Structure
 
-**Bilciurescu Elena-Alina | Solomon Miruna-Maria | Toma Daria-Maria**
-
-Group 1241EA CTI-E, Faculty of Automatic Control and Computers
+```
+streamflix/
+├── api-gateway/                 # Spring Cloud Gateway (Port 8080)
+│   ├── src/main/
+│   │   ├── java/                # Gateway configuration
+│   │   └── resources/
+│   │       ├── application.yml  # Routes configuration
+│   │       └── static/ui/       # Web UI files
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── user-service/                # Singleton Pattern (Port 8081)
+│   ├── src/main/java/
+│   │   ├── config/
+│   │   │   └── ConfigurationManager.java  # Singleton
+│   │   ├── controller/          # REST endpoints
+│   │   ├── service/             # Business logic
+│   │   ├── repository/          # Data access
+│   │   ├── model/               # User entity
+│   │   └── dto/                 # Data transfer objects
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── content-service/             # Factory Pattern (Port 8082)
+│   ├── src/main/java/
+│   │   ├── factory/
+│   │   │   ├── ContentFactory.java      # Factory interface
+│   │   │   ├── MovieFactory.java        # Movie creator
+│   │   │   └── TVSeriesFactory.java     # TV Series creator
+│   │   ├── controller/
+│   │   ├── service/
+│   │   ├── repository/
+│   │   ├── model/               # Content, Movie, TVSeries
+│   │   └── dto/
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── video-service/               # Observer Pattern (Port 8083)
+│   ├── src/main/java/
+│   │   ├── observer/
+│   │   │   ├── VideoEventPublisher.java      # Event publisher
+│   │   │   ├── AnalyticsObserver.java        # Analytics tracking
+│   │   │   └── RecommendationUpdateObserver.java  # Update recommendations
+│   │   ├── controller/
+│   │   ├── service/
+│   │   ├── repository/
+│   │   ├── model/               # WatchEvent, Rating
+│   │   └── dto/
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── recommendation-service/      # Strategy Pattern (Port 8084)
+│   ├── src/main/java/
+│   │   ├── strategy/
+│   │   │   ├── RecommendationStrategy.java   # Strategy interface
+│   │   │   ├── TrendingStrategy.java         # For new users
+│   │   │   ├── HistoryBasedStrategy.java     # For returning users
+│   │   │   └── RatingBasedStrategy.java      # For users with ratings
+│   │   ├── controller/
+│   │   ├── service/
+│   │   ├── repository/
+│   │   ├── model/               # UserPreference
+│   │   └── dto/
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── postman/                     # API Testing
+│   ├── StreamFlix_Complete_Collection.postman_collection.json
+│   └── README.md
+│
+├── docs/
+│   └── diagrams/                # UML diagrams (Milestone 2)
+│
+├── docker-compose.yml           # Docker orchestration
+├── build-all.sh                 # Build script (Mac/Linux)
+├── build-all.bat                # Build script (Windows)
+├── QUICKSTART.md                # Quick start guide
+├── FIXES_APPLIED.md             # Recent fixes documentation
+└── README.md                    # This file
+```
 
 ---
 
-**For detailed pattern explanations, see [DESIGN_PATTERNS.md](./DESIGN_PATTERNS.md)**
+## Troubleshooting
 
-**For implementation guide, see [IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)**
+### Services Won't Start
+
+**Check logs:**
+```bash
+docker-compose logs <service-name>
+```
+
+**Rebuild without cache:**
+```bash
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+### Port Already in Use
+
+**Find process using port (Mac/Linux):**
+```bash
+lsof -i :8080
+```
+
+**Find process using port (Windows):**
+```bash
+netstat -ano | findstr :8080
+```
+
+**Kill process:**
+```bash
+kill -9 <PID>  # Mac/Linux
+taskkill /PID <PID> /F  # Windows
+```
+
+### Database Connection Issues
+
+**Check PostgreSQL containers:**
+```bash
+docker-compose ps | grep postgres
+```
+
+**Restart databases:**
+```bash
+docker-compose restart postgres-user postgres-content postgres-video postgres-recommendation
+```
+
+### Build Fails
+
+**Clean Maven cache:**
+```bash
+mvn clean
+```
+
+**Verify Java version:**
+```bash
+java -version  # Must be Java 17
+```
+
+### UI Not Loading
+
+**Check if API Gateway has UI files:**
+```bash
+docker exec streamflix-api-gateway ls -la /app/BOOT-INF/classes/static/ui/
+```
+
+**Rebuild API Gateway:**
+```bash
+cd api-gateway
+mvn clean package -DskipTests
+docker-compose build api-gateway
+docker-compose up -d api-gateway
+```
+
+---
+
+## References
+
+- **Design Patterns**: [Refactoring Guru](https://refactoring.guru/design-patterns)
+- **Spring Boot**: [Documentation](https://spring.io/projects/spring-boot)
+- **Spring Cloud Gateway**: [Documentation](https://spring.io/projects/spring-cloud-gateway)
+- **Docker**: [Documentation](https://docs.docker.com/)
+- **PostgreSQL**: [Documentation](https://www.postgresql.org/docs/)
+- **Microservices Architecture**: [Microservices.io](https://microservices.io/)
+
+---
+
+## Team
+
+**Bilciurescu Elena-Alina** - 1241EA  
+**Solomon Miruna-Maria** - 1241EA  
+**Toma Daria-Maria** - 1241EA
+
+

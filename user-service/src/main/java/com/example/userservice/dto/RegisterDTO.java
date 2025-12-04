@@ -26,4 +26,7 @@ public class RegisterDTO {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
+    
+    // Optional: Subscription tier (defaults to BASIC if not provided)
+    private String tier;
 }

@@ -127,7 +127,7 @@ bind('#form-reco', 'submit', async (e) => {
 async function runSingletonTest() {
   show('res-demo-singleton', 'Running singleton test...');
   try {
-    const data = await getJson('/api/demo/singleton-test');
+    const data = await getJson('/api/users/demo/singleton-test');
     show('res-demo-singleton', data);
   } catch (err) {
     show('res-demo-singleton', `Error: ${err}`);
