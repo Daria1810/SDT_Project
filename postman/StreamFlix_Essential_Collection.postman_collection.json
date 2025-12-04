@@ -1,0 +1,541 @@
+{
+	"info": {
+		"name": "StreamFlix Essential Collection",
+		"description": "Essential 30 working requests for StreamFlix microservices demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01 Health Checks (5)",
+			"item": [
+				{
+					"name": "1. Gateway Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["actuator", "health"]
+						}
+					}
+				},
+				{
+					"name": "2. User Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "health"]
+						}
+					}
+				},
+				{
+					"name": "3. Content Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/content/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content", "health"]
+						}
+					}
+				},
+				{
+					"name": "4. Video Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/videos/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "health"]
+						}
+					}
+				},
+				{
+					"name": "5. Recommendation Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "health"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "02 User Service - Singleton Pattern (6)",
+			"item": [
+				{
+					"name": "6. Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"demo_user\",\n  \"email\": \"demo@streamflix.com\",\n  \"password\": \"Demo123!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/register",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "register"]
+						}
+					}
+				},
+				{
+					"name": "7. Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"demo@streamflix.com\",\n  \"password\": \"Demo123!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "login"]
+						}
+					}
+				},
+				{
+					"name": "8. Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "9. Singleton Demo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/singleton/demo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "singleton", "demo"]
+						}
+					}
+				},
+				{
+					"name": "10. Get Config (Singleton)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/config",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "config"]
+						}
+					}
+				},
+				{
+					"name": "11. Verify Singleton Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/demo/singleton-test",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "demo", "singleton-test"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "03 Content Service - Factory Pattern (7)",
+			"item": [
+				{
+					"name": "12. Create Movie (Factory)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"MOVIE\",\n  \"title\": \"Inception\",\n  \"description\": \"A mind-bending thriller\",\n  \"genre\": \"Sci-Fi\",\n  \"releaseYear\": 2010,\n  \"duration\": 148,\n  \"director\": \"Christopher Nolan\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/content",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content"]
+						}
+					}
+				},
+				{
+					"name": "13. Create TV Series (Factory)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"TV_SERIES\",\n  \"title\": \"Breaking Bad\",\n  \"description\": \"Chemistry teacher turns criminal\",\n  \"genre\": \"Drama\",\n  \"releaseYear\": 2008,\n  \"seasons\": 5,\n  \"episodesPerSeason\": 13\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/content",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content"]
+						}
+					}
+				},
+				{
+					"name": "14. Get All Content",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/content",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content"]
+						}
+					}
+				},
+				{
+					"name": "15. Search Content",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/content/search?title=Inception",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content", "search"],
+							"query": [
+								{
+									"key": "title",
+									"value": "Inception"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "16. Get by Genre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/content/genre/Sci-Fi",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content", "genre", "Sci-Fi"]
+						}
+					}
+				},
+				{
+					"name": "17. Get Top Rated",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/content/top-rated?minRating=7.0",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content", "top-rated"],
+							"query": [
+								{
+									"key": "minRating",
+									"value": "7.0"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "18. Factory Pattern Demo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/content/factory/demo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "content", "factory", "demo"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "04 Video Service - Observer Pattern (6)",
+			"item": [
+				{
+					"name": "19. Record Watch Event (Observer)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"contentId\": 1,\n  \"progress\": 3600,\n  \"completed\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/videos/watch",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "watch"]
+						}
+					}
+				},
+				{
+					"name": "20. Rate Content (Observer)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"contentId\": 1,\n  \"score\": 5.0,\n  \"review\": \"Amazing movie!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/videos/rate",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "rate"]
+						}
+					}
+				},
+				{
+					"name": "21. Get Watch History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/videos/watch/user/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "watch", "user", "1"]
+						}
+					}
+				},
+				{
+					"name": "22. Observer Pattern Demo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/videos/observers/demo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "observers", "demo"]
+						}
+					}
+				},
+				{
+					"name": "23. List Observers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/videos/observers/list",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "observers", "list"]
+						}
+					}
+				},
+				{
+					"name": "24. Observer Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/videos/observers/status",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "videos", "observers", "status"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "05 Recommendation Service - Strategy Pattern (6)",
+			"item": [
+				{
+					"name": "25. Get Recommendations (Strategy)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/1?limit=5",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "1"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "26. Update User Preferences",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"preferredGenres\": \"Sci-Fi,Action,Drama\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/update",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "update"]
+						}
+					}
+				},
+				{
+					"name": "27. Strategy Pattern Demo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/strategy/demo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "strategy", "demo"]
+						}
+					}
+				},
+				{
+					"name": "28. List All Strategies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/strategy/list",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "strategy", "list"]
+						}
+					}
+				},
+				{
+					"name": "29. Get Trending Content",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/trending?limit=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "trending"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "30. Get Personalized Feed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recommendations/1/feed",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "recommendations", "1", "feed"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
